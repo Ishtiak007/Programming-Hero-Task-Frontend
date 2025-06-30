@@ -10,6 +10,7 @@ export type TEvent = {
   title: string;
   description: string;
   price: number;
+  date?: string;
   images: string[];
   userID?: TUserId;
   status?: "available" | "sold";
@@ -24,8 +25,8 @@ export type TEvent = {
     | "engagement"
     | "anniversary"
     | "productLaunch";
-  location: string;
   contactNumber: string;
+  location: string;
   isDeleted?: false;
   createdAt: string;
   updatedAt: string;

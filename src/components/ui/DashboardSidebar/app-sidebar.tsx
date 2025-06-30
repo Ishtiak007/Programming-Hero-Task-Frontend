@@ -30,10 +30,10 @@ const data = {
       ],
     },
     {
-      title: "Manage Products",
+      title: "Manage Events",
       items: [
-        { title: "Add Product", url: "/user/dashboard/products/add-product" },
-        { title: "Your added Products", url: "/user/dashboard/products" },
+        { title: "Add Event", url: "/user/dashboard/events/add-event" },
+        { title: "Your added Events", url: "/user/dashboard/products" },
       ],
     },
     {
@@ -87,7 +87,9 @@ export async function AppSidebar({
             <SidebarMenuButton size="lg" asChild>
               <Link href="/">
                 <div className="flex flex-col gap-0.5 leading-none ">
-                  <span className="font-bold">SecondHand Marketplace</span>
+                  <span className="font-bold">
+                    Event <span className="text-indigo-500">Manager</span>
+                  </span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -101,7 +103,7 @@ export async function AppSidebar({
               (item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <span className="font-medium text-teal-700 my-2">
+                    <span className="font-medium text-indigo-700 my-2">
                       {item.title}
                     </span>
                   </SidebarMenuButton>
@@ -132,7 +134,7 @@ export async function AppSidebar({
       </SidebarContent>
       <SidebarRail />
       <SidebarFooter>
-        <button className="hover:cursor-pointer border border-neutral-300 px-4 flex py-[6px] gap-3 items-center justify-center font-medium rounded-full transition-all duration-300 ease-in-out hover:bg-teal-700 hover:text-white  my-4 mt-2 w-full flex-1 bg-zinc-50">
+        <button className="hover:cursor-pointer border border-neutral-300 px-4 flex py-[6px] gap-3 items-center justify-center font-medium rounded-full transition-all duration-300 ease-in-out hover:bg-indigo-700 hover:text-white  my-4 mt-2 w-full flex-1 bg-zinc-50">
           <Link
             className="text-center flex items-center justify-center gap-3"
             href={"/"}
