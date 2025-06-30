@@ -1,28 +1,26 @@
 "use client";
 import { useEffect, useState, Fragment } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { logout } from "../../redux/features/authSlice";
 import { toast } from "sonner";
-import { Button } from "../ui/button";
 import NavigationLink from "./NavigationLink";
 import Container from "./Container";
 import {
-  Book,
   Building2,
   HelpCircle,
   Home,
-  LayoutDashboard,
   LogIn,
-  LogOutIcon,
   Mail,
-  ShoppingBag,
   Menu as HamburgerMenu,
+  Calendar,
+  PlusCircle,
+  User,
 } from "lucide-react";
-import { Separator } from "../ui/separator";
 import { logoutFromCookie } from "../../services/AuthApi";
 
 export default function Navbar() {
@@ -31,7 +29,7 @@ export default function Navbar() {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMobileMegaOpen, setIsMobileMegaOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 200);
@@ -39,8 +37,26 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Close profile dropdown when clicked outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      const target = event.target as HTMLElement;
+      if (
+        !target.closest("#profile-menu-button") &&
+        !target.closest("#profile-menu-dropdown")
+      ) {
+        setIsProfileMenuOpen(false);
+      }
+    }
+    if (isProfileMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isProfileMenuOpen]);
+
   const handleLogout = async () => {
     dispatch(logout());
+    // Assume logoutFromCookie is an async function you import
     await logoutFromCookie();
     toast.success("You have been logged out successfully");
     router.push("/");
@@ -57,9 +73,9 @@ export default function Navbar() {
       <Container>
         <nav className="mt-4">
           <div className="mt-4 lg:flex space-y-4 justify-between items-center lg:mb-4">
-            <Link href={"/"}>
-              <h1 className="lg:text-lg font-semibold">
-                SecondHand<span className="text-teal-600">Marketplace</span>
+            <Link href="/">
+              <h1 className="lg:text-lg font-semibold cursor-pointer select-none">
+                Event<span className="text-indigo-600">Management</span>
               </h1>
             </Link>
 
@@ -67,7 +83,8 @@ export default function Navbar() {
             <div className="lg:hidden flex items-center">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-teal-700"
+                className="text-indigo-700"
+                aria-label="Toggle mobile menu"
               >
                 <HamburgerMenu size={28} />
               </button>
@@ -79,50 +96,61 @@ export default function Navbar() {
                 <NavigationLink route="Home" path="/" />
               </li>
               <li>
-                <NavigationLink route="All Products" path="/products" />
-              </li>
-              <li className="group relative">
-                <NavigationLink route="Recent Products" path="#" />
-                <div className="absolute left-1/2 top-full transform -translate-x-1/2 invisible group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-200 z-50 min-w-[50vw] max-w-4xl">
-                  {/* <MegaMenu /> */}
-                </div>
+                <NavigationLink route="Events" path="/events" />
               </li>
               <li>
-                <NavigationLink route="About Us" path="/aboutUs" />
+                <NavigationLink route="Add Event" path="/add-event" />
               </li>
               <li>
-                <NavigationLink route="FAQ" path="/faq" />
-              </li>
-              <li>
-                <NavigationLink route="Contact" path="/contactUs" />
+                <NavigationLink route="My Event" path="/my-event" />
               </li>
             </ul>
 
-            {/* Action Buttons */}
-            <div className="lg:flex items-center gap-4">
-              <Link href="/user/dashboard">
-                <Button
-                  variant="outline"
-                  className="cursor-pointer border border-neutral-300 lg:px-4 flex lg:py-[6px] gap-3 rounded-full hover:bg-teal-700 hover:text-white bg-zinc-50"
-                >
-                  Dashboard
-                </Button>
-              </Link>
-
-              {user ? (
-                <div onClick={handleLogout}>
-                  <span className="hover:cursor-pointer border border-neutral-300 px-4 flex py-[6px] gap-3 items-center font-medium rounded-full hover:bg-teal-800 hover:text-white my-4 mt-2 bg-teal-700 text-white text-sm sm:text-base">
-                    <LogOutIcon className="w-6 h-6" /> Logout
-                  </span>
-                </div>
+            {/* Right side: Sign In or Profile */}
+            <div className="lg:flex items-center gap-4 relative">
+              {!user ? (
+                <Link href="/login">
+                  <button className="border border-neutral-300 px-4 py-1.5 rounded-full text-indigo-700 font-medium hover:bg-indigo-700 hover:text-white transition">
+                    Sign In
+                  </button>
+                </Link>
               ) : (
-                <div className="hidden lg:flex">
-                  <Link href={"/login"}>
-                    <span className="hover:cursor-pointer border border-neutral-300 px-4 flex py-[6px] gap-3 items-center font-medium rounded-full hover:bg-teal-800 hover:text-white my-4 mt-2 bg-teal-700 text-white text-sm sm:text-base">
-                      <LogIn className="w-6 h-6" /> Login
-                    </span>
-                  </Link>
-                </div>
+                <>
+                  <button
+                    id="profile-menu-button"
+                    onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                    className="flex items-center rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    aria-haspopup="true"
+                    aria-expanded={isProfileMenuOpen}
+                  >
+                    <Image
+                      src={user.name || "/default-profile.png"}
+                      alt="Profile"
+                      width={40}
+                      height={40}
+                      className="rounded-full"
+                    />
+                  </button>
+
+                  {isProfileMenuOpen && (
+                    <div
+                      id="profile-menu-dropdown"
+                      className="absolute right-0 bottom-0 translate-y-full w-44 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+                    >
+                      <div className="px-4 py-3 border-b border-gray-200">
+                        <p className="text-sm text-gray-700 truncate">
+                          {user.name || user.identifier || "User"}
+                        </p>
+                      </div>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-indigo-600 hover:text-white"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -137,10 +165,42 @@ export default function Navbar() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/products" className="flex gap-2 items-center">
-                    <ShoppingBag className="w-6 h-6" /> Products
+                  <Link href="/events" className="flex gap-2 items-center">
+                    <Calendar className="w-6 h-6" /> Events
                   </Link>
                 </li>
+                <li>
+                  <Link href="/add-event" className="flex gap-2 items-center">
+                    <PlusCircle className="w-6 h-6" /> Add Event
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/my-event" className="flex gap-2 items-center">
+                    <User className="w-6 h-6" /> My Event
+                  </Link>
+                </li>
+                {!user ? (
+                  <li>
+                    <Link
+                      href="/login"
+                      className="flex gap-2 items-center text-indigo-700 font-medium"
+                    >
+                      <LogIn className="w-6 h-6" /> Sign In
+                    </Link>
+                  </li>
+                ) : (
+                  <li className="border-t pt-4">
+                    <p className="text-gray-700 px-2 truncate">
+                      {user.name || user.identifier || "User"}
+                    </p>
+                    <button
+                      onClick={handleLogout}
+                      className="mt-2 w-full text-left text-red-600 hover:text-red-800 px-2"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                )}
                 <li>
                   <Link href="/aboutUs" className="flex gap-2 items-center">
                     <Building2 className="w-6 h-6" /> About Us
@@ -156,40 +216,7 @@ export default function Navbar() {
                     <HelpCircle className="w-6 h-6" /> FAQs
                   </Link>
                 </li>
-                <li>
-                  <Link href="/blogs" className="flex gap-2 items-center">
-                    <Book className="w-6 h-6" /> Blogs
-                  </Link>
-                </li>
-                <li>
-                  <button
-                    onClick={() => setIsMobileMegaOpen(!isMobileMegaOpen)}
-                    className="flex gap-2 items-center text-teal-700 font-medium"
-                  >
-                    Discover
-                  </button>
-                </li>
-
-                {user && (
-                  <Fragment>
-                    <li>
-                      <Link
-                        href="/user/dashboard"
-                        className="flex gap-2 items-center"
-                      >
-                        <LayoutDashboard className="w-6 h-6" /> Dashboard
-                      </Link>
-                    </li>
-                    <Separator />
-                  </Fragment>
-                )}
               </ul>
-
-              {/* {isMobileMegaOpen && (
-                <div className="mt-4 max-h-[60vh] overflow-y-auto">
-                  <MegaMenu />
-                </div>
-              )} */}
             </div>
           )}
         </nav>

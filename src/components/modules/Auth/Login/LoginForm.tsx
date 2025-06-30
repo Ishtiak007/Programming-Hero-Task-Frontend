@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../ui/card";
+import { CardContent, CardHeader, CardTitle } from "../../../ui/card";
 import { Separator } from "../../../ui/separator";
 import {
   FormControl,
@@ -70,9 +70,9 @@ export default function LoginForm() {
     setValue("password", "123456Aa!");
   };
   return (
-    <div className="min-h-screen h-screen w-full max-w-3xl flex items-center justify-center  p-4 mx-auto">
-      <div className="w-full md:p-6">
-        <Card className="w-full">
+    <div className="min-h-screen h-screen w-full max-w-3xl flex items-center justify-center  p-4 mx-auto ">
+      <div className="w-full md:p-6 max-w-screen-md rounded-xl overflow-hidden shadow-xl">
+        <div className="">
           <CardHeader>
             <CardTitle className="text-xl lg:text-2xl font-bold text-center">
               Login your account
@@ -155,7 +155,7 @@ export default function LoginForm() {
               </div>
             </FormProvider>
           </CardContent>
-        </Card>
+        </div>
       </div>
     </div>
   );
