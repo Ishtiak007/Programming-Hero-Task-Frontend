@@ -13,20 +13,20 @@ const Footer = () => {
     <motion.footer
       initial={{ height: 0 }}
       whileInView={{ height: "auto" }}
-      transition={{ duration: 1 }}
-      className="bg-[#263238] text-white px-6 py-10"
+      transition={{ duration: 0.3 }}
+      className="bg-[#1E293B] text-white px-6 py-10"
     >
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
         {/* Logo & Description */}
         <div className="text-center sm:text-left">
           <Link href="/">
             <h1 className="text-xl sm:text-2xl font-semibold">
-              SecondHand
-              <span className="text-teal-300">Marketplace</span>
+              Event
+              <span className="text-indigo-400">Management</span>
             </h1>
           </Link>
           <p className="mt-3 text-sm leading-relaxed max-w-xs mx-auto sm:mx-0">
-            Your Go-To Platform for Buying and Selling Pre-Loved Products
+            Simplify your event planning, booking, and management experience.
           </p>
         </div>
 
@@ -36,27 +36,27 @@ const Footer = () => {
           <ul className="flex flex-col gap-3 text-sm">
             <li>
               <a href="#" className="hover:underline">
-                Free Delivery on Select Products
+                Event Scheduling & Management
               </a>
             </li>
             <li>
               <a href="#" className="hover:underline">
-                Secure Payment Options
+                Venue Booking Assistance
               </a>
             </li>
             <li>
               <a href="#" className="hover:underline">
-                Seller Support & Assistance
+                Ticketing & Registration
               </a>
             </li>
             <li>
               <a href="#" className="hover:underline">
-                Product Warranty Information
+                Custom Event Promotion
               </a>
             </li>
             <li>
               <a href="#" className="hover:underline">
-                Product Listing for Sellers
+                24/7 Customer Support
               </a>
             </li>
           </ul>
@@ -73,12 +73,12 @@ const Footer = () => {
             </li>
             <li>
               <a href="#" className="hover:underline">
-                Return & Refund Policy
+                Refund & Cancellation Policy
               </a>
             </li>
             <li>
               <a href="#" className="hover:underline">
-                Shipping & Delivery Info
+                Event Guidelines
               </a>
             </li>
             <li>
@@ -97,21 +97,37 @@ const Footer = () => {
         {/* Contact & Social */}
         <div>
           <h2 className="font-bold text-base mb-4">Contact</h2>
-          <p className="text-sm mb-2">ishtiak.sparrow98@gmail.com</p>
-          <p className="text-sm mb-6">+8801521742729</p>
+          <p className="text-sm mb-2">support@EventManagement.com</p>
+          <p className="text-sm mb-6">+1 (555) 123-4567</p>
 
           <h2 className="font-bold text-base mb-3">Follow Us</h2>
           <div className="flex gap-4 text-xl">
-            <a href="#" className="hover:scale-110 transition-transform">
+            <a
+              href="#"
+              className="hover:scale-110 transition-transform"
+              aria-label="Facebook"
+            >
               <BsFacebook />
             </a>
-            <a href="#" className="hover:scale-110 transition-transform">
+            <a
+              href="#"
+              className="hover:scale-110 transition-transform"
+              aria-label="Instagram"
+            >
               <BsInstagram />
             </a>
-            <a href="#" className="hover:scale-110 transition-transform">
+            <a
+              href="#"
+              className="hover:scale-110 transition-transform"
+              aria-label="Twitter"
+            >
               <BsTwitter />
             </a>
-            <a href="#" className="hover:scale-110 transition-transform">
+            <a
+              href="#"
+              className="hover:scale-110 transition-transform"
+              aria-label="Pinterest"
+            >
               <BsPinterest />
             </a>
           </div>
@@ -119,9 +135,8 @@ const Footer = () => {
       </div>
 
       {/* Bottom Divider */}
-      <div className="mt-10 border-t border-teal-600 pt-4 text-center text-sm text-teal-200">
-        © {new Date().getFullYear()} SecondHand Marketplace. All rights
-        reserved.
+      <div className="mt-10 border-t border-indigo-400 pt-4 text-center text-sm text-indigo-300">
+        © {new Date().getFullYear()} EventManagement. All rights reserved.
       </div>
     </motion.footer>
   );
