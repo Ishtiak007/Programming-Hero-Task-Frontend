@@ -215,6 +215,34 @@ export default function AddEventForm() {
             <div>
               <FormField
                 control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Location <span className="text-red-500">**</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Enter event location" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div>
+              <FormItem>
+                <FormLabel>
+                  Attendee Count <span className="text-red-500">**</span>
+                </FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder="Attendee Count" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            </div>
+            <div>
+              <FormField
+                control={form.control}
                 name="description"
                 render={({ field }) => (
                   <FormItem>
@@ -227,23 +255,6 @@ export default function AddEventForm() {
                         placeholder="Description about this event"
                         className="w-full min-h-[200px]"
                       />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div>
-              <FormField
-                control={form.control}
-                name="location"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Location <span className="text-red-500">**</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Enter event location" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -292,7 +303,7 @@ export default function AddEventForm() {
           <div className="mt-4">
             <button
               type="submit"
-              className="hover:cursor-pointer border border-neutral-300 px-4 flex py-[6px] gap-3 items-center justify-center font-medium rounded-full transition-all duration-300 ease-in-out bg-indigo-600 text-amber-50 hover:bg-indigo-800 hover:text-white my-4 mt-2 w-full flex-1"
+              className="hover:cursor-pointer border border-neutral-300 px-4 flex py-[6px] gap-3 items-center justify-center font-medium rounded-full transition-all duration-300 ease-in-out bg-indigo-600 text-amber-50 hover:bg-indigo-800 hover:text-white my-4 mt-2 mx-auto"
             >
               Add Event
             </button>
