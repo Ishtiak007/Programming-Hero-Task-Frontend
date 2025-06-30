@@ -22,7 +22,7 @@ const Footer = () => {
           <Link href="/">
             <h1 className="text-xl sm:text-2xl font-semibold">
               Event
-              <span className="text-indigo-400">Management</span>
+              <span className="text-indigo-400">Manager</span>
             </h1>
           </Link>
           <p className="mt-3 text-sm leading-relaxed max-w-xs mx-auto sm:mx-0">

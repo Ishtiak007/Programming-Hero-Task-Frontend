@@ -75,7 +75,7 @@ export default function Navbar() {
           <div className="mt-4 lg:flex space-y-4 justify-between items-center lg:mb-4">
             <Link href="/">
               <h1 className="lg:text-lg font-semibold cursor-pointer select-none">
-                Event<span className="text-indigo-600">Management</span>
+                Event<span className="text-indigo-600">Manager</span>
               </h1>
             </Link>
 
