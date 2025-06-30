@@ -44,9 +44,9 @@ import {
 } from "../../../../services/EventApi";
 
 export default function ManageUserAddedEvents({
-  products,
+  events,
 }: {
-  products: TEvent[];
+  events: TEvent[];
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -58,12 +58,10 @@ export default function ManageUserAddedEvents({
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [productToDelete, setProductToDelete] = React.useState<string | null>(
-    null
-  );
+  const [eventToDelete, seteventToDelete] = React.useState<string | null>(null);
 
   // delete a product
-  const handleDeleteProduct = async (id: string) => {
+  const handleDeleteEvent = async (id: string) => {
     try {
       const response = await deleteProductById(id);
       if (response?.success) {
@@ -78,7 +76,7 @@ export default function ManageUserAddedEvents({
   };
 
   // product status update
-  const handleUpdateProductStatus = async (id: string, status: string) => {
+  const handleUpdateEventStatus = async (id: string, status: string) => {
     try {
       const response = await updateProductStatusById(id, { status });
       if (response?.success) {
@@ -93,14 +91,14 @@ export default function ManageUserAddedEvents({
 
   // Open the confirmation modal
   const openModal = (id: string) => {
-    setProductToDelete(id);
+    seteventToDelete(id);
     setIsModalOpen(true);
   };
 
   // Close the confirmation modal
   const closeModal = () => {
     setIsModalOpen(false);
-    setProductToDelete(null);
+    seteventToDelete(null);
   };
 
   const columns: ColumnDef<TEvent>[] = [
@@ -192,7 +190,7 @@ export default function ManageUserAddedEvents({
       cell: ({ row }) => {
         const product = row.original;
         const handleStatusChange = (newStatus: string) => {
-          handleUpdateProductStatus(product._id, newStatus);
+          handleUpdateEventStatus(product._id, newStatus);
         };
         return (
           <DropdownMenu>
@@ -256,7 +254,7 @@ export default function ManageUserAddedEvents({
   ];
 
   const table = useReactTable({
-    data: products,
+    data: events,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -384,8 +382,8 @@ export default function ManageUserAddedEvents({
           <div className="bg-white p-6 rounded-lg w-96 shadow-lg transform transition-all duration-300 ease-out opacity-100 translate-y-0">
             <h3 className="text-xl font-semibold">Confirm Deletion</h3>
             <p className="mt-4 text-sm text-gray-700">
-              Are you sure you want to delete this product? This action cannot
-              be undone.
+              Are you sure you want to delete this event? This action cannot be
+              undone.
             </p>
             <div className="mt-6 flex justify-between">
               <button
@@ -396,8 +394,8 @@ export default function ManageUserAddedEvents({
               </button>
               <button
                 onClick={() => {
-                  if (productToDelete) {
-                    handleDeleteProduct(productToDelete);
+                  if (eventToDelete) {
+                    handleDeleteEvent(eventToDelete);
                   }
                 }}
                 className="px-4 py-2 bg-red-600 text-white rounded-md cursor-pointer"

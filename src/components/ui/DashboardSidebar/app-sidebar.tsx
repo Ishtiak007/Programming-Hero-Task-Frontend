@@ -33,7 +33,7 @@ const data = {
       title: "Manage Events",
       items: [
         { title: "Add Event", url: "/user/dashboard/events/add-event" },
-        { title: "Your added Events", url: "/user/dashboard/products" },
+        { title: "Your added Events", url: "/user/dashboard/events" },
       ],
     },
     {

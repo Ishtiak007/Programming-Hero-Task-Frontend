@@ -3,6 +3,50 @@
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
+export const addEvent = async (eventData: any) => {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/listings`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: (await cookies()).get("accessToken")!.value,
+      },
+      body: JSON.stringify(eventData),
+    });
+    revalidateTag("EVENT");
+
+    const data = await res.json();
+    return data;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+export const getEventsByUser = async () => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/listings/byUser`,
+      {
+        next: {
+          tags: ["EVENT"],
+        },
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: (await cookies()).get("accessToken")!.value,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    return data;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+// .............................end.....................
 export const getAllProducts = async () => {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/listings`, {
@@ -45,49 +89,6 @@ export const getProductById = async (id: string) => {
         },
       }
     );
-    const data = await res.json();
-    return data;
-  } catch (error: any) {
-    throw new Error(error);
-  }
-};
-
-export const getProductsByUser = async () => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/listings/byUser`,
-      {
-        next: {
-          tags: ["PRODUCT"],
-        },
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: (await cookies()).get("accessToken")!.value,
-        },
-      }
-    );
-
-    const data = await response.json();
-
-    return data;
-  } catch (error: any) {
-    throw new Error(error);
-  }
-};
-
-export const addProduct = async (productData: any) => {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/listings`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: (await cookies()).get("accessToken")!.value,
-      },
-      body: JSON.stringify(productData),
-    });
-    revalidateTag("PRODUCT");
-
     const data = await res.json();
     return data;
   } catch (error: any) {

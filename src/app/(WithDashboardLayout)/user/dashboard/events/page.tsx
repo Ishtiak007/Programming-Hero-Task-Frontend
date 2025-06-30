@@ -1,14 +1,14 @@
 export const dynamic = "force-dynamic";
 import React from "react";
-import { getProductsByUser } from "../../../../../services/EventApi";
 import ManageUserAddedEvents from "../../../../../components/modules/Events/ManageAllEvents";
+import { getEventsByUser } from "../../../../../services/EventApi";
 
 const UserAddedProducts = async () => {
-  const { data } = await getProductsByUser();
-  const products = data ?? [];
+  const { data } = await getEventsByUser();
+  const events = data ?? [];
   return (
     <div>
-      <ManageUserAddedEvents products={products} />
+      <ManageUserAddedEvents events={events} />
     </div>
   );
 };

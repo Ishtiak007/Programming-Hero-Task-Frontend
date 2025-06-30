@@ -99,10 +99,16 @@ export default function Navbar() {
                 <NavigationLink route="Events" path="/events" />
               </li>
               <li>
-                <NavigationLink route="Add Event" path="/add-event" />
+                <NavigationLink
+                  route="Add Event"
+                  path="/user/dashboard/events/add-event"
+                />
               </li>
               <li>
-                <NavigationLink route="My Event" path="/my-event" />
+                <NavigationLink
+                  route="My Event"
+                  path="/user/dashboard/events"
+                />
               </li>
             </ul>
 

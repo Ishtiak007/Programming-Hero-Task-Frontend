@@ -28,7 +28,7 @@ import {
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { addProductValidation } from "./addEvent.validation";
-import { addProduct } from "../../../../services/EventApi";
+import { addEvent } from "../../../../services/EventApi";
 
 const categoryOptions = [
   { value: "wedding", label: "Wedding" },
@@ -43,7 +43,7 @@ const categoryOptions = [
   { value: "productLaunch", label: "Product Launch" },
 ];
 
-export default function AddProductForm() {
+export default function AddEventForm() {
   const router = useRouter();
   const form = useForm({
     defaultValues: {
@@ -78,7 +78,7 @@ export default function AddProductForm() {
     };
 
     try {
-      const response = await addProduct(modifiedData);
+      const response = await addEvent(modifiedData);
       if (response?.success) {
         toast.success("Event is added successfully");
         router.push("/user/dashboard/events");
