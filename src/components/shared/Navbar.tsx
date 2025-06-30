@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { logout } from "../../redux/features/authSlice";
-import { logoutFromCookie } from "../../services/AuthApi";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import NavigationLink from "./NavigationLink";
@@ -24,7 +23,7 @@ import {
   Menu as HamburgerMenu,
 } from "lucide-react";
 import { Separator } from "../ui/separator";
-import { MegaMenu } from "../modules/MegaMenu";
+import { logoutFromCookie } from "../../services/AuthApi";
 
 export default function Navbar() {
   const user = useSelector((state: RootState) => state.auth?.user);
@@ -85,7 +84,7 @@ export default function Navbar() {
               <li className="group relative">
                 <NavigationLink route="Recent Products" path="#" />
                 <div className="absolute left-1/2 top-full transform -translate-x-1/2 invisible group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-200 z-50 min-w-[50vw] max-w-4xl">
-                  <MegaMenu />
+                  {/* <MegaMenu /> */}
                 </div>
               </li>
               <li>
@@ -186,11 +185,11 @@ export default function Navbar() {
                 )}
               </ul>
 
-              {isMobileMegaOpen && (
+              {/* {isMobileMegaOpen && (
                 <div className="mt-4 max-h-[60vh] overflow-y-auto">
                   <MegaMenu />
                 </div>
-              )}
+              )} */}
             </div>
           )}
         </nav>
