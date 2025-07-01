@@ -7,7 +7,6 @@ import {
   ColumnFiltersState,
   SortingState,
   VisibilityState,
-  flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
@@ -193,9 +192,13 @@ export default function ManageUserAddedEvents({
                 <h2 className="text-lg font-semibold capitalize mb-1 truncate">
                   {event.title}
                 </h2>
+                <h2 className="text-sm my-3 truncate">{event.description}</h2>
 
                 <p className="text-sm text-gray-600 mb-2 capitalize">
                   <strong>Event Type:</strong> {event.category}
+                </p>
+                <p className="text-sm text-gray-600 mb-2 capitalize">
+                  <strong>Location:</strong> {event.location}
                 </p>
 
                 <p className="text-sm text-gray-600 mb-2">

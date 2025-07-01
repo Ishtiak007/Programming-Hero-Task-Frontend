@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { CardContent, CardHeader, CardTitle } from "../../../ui/card";
-import { Separator } from "../../../ui/separator";
 import {
   FormControl,
   FormField,
@@ -39,7 +38,6 @@ export default function LoginForm() {
 
   const {
     formState: { isSubmitting },
-    setValue,
   } = form;
 
   const onSubmit: SubmitHandler<FieldValues> = async (data: FieldValues) => {
@@ -123,10 +121,6 @@ export default function LoginForm() {
                 >
                   Sign up
                 </Link>
-              </p>
-              <Separator />
-              <p className="text-center text-gray-500 text-[15px] my-5">
-                Click here to auto-fill your email and password
               </p>
             </FormProvider>
           </CardContent>

@@ -113,7 +113,7 @@ export default function SalesHistory({ salesHistory }: { salesHistory: any }) {
       cell: ({ row }) => {
         return (
           <div className="font-medium ">
-            BDT {row.original.itemID?.price || "N/A"} ৳
+            USD {row.original.itemID?.price || "N/A"} $
           </div>
         );
       },

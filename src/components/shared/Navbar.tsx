@@ -116,7 +116,7 @@ export default function Navbar() {
             <div className="lg:flex items-center gap-4 relative">
               {!user ? (
                 <Link href="/login">
-                  <button className="border border-neutral-300 px-4 py-1.5 rounded-full text-indigo-700 font-medium hover:bg-indigo-700 hover:text-white transition">
+                  <button className="cursor-pointer border border-neutral-300 px-4 py-1.5 rounded-full text-indigo-700 font-medium hover:bg-indigo-700 hover:text-white transition">
                     Sign In
                   </button>
                 </Link>

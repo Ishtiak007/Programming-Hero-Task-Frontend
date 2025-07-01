@@ -7,26 +7,28 @@ export const authRoutes = ["/login", "/register"];
 
 const roleBasedPrivateRoutes = {
   user: [
+    /^\/events/,
     /^\/user/,
     /^\/checkout/,
     /^\/profile/,
-    /^\/dashboard\/user\/products/,
-    /^\/dashboard\/user\/products\/add-product/,
-    /^\/dashboard\/user\/products\/update-product/,
+    /^\/dashboard\/user\/events/,
+    /^\/dashboard\/user\/events\/add-event/,
+    /^\/dashboard\/user\/events\/update-event/,
     /^\/dashboard\/user\/orders\/purchase-history/,
-    /^\/dashboard\/user\/orders\/sales-history/,
+    /^\/dashboard\/user\/orders\/joined-history/,
   ],
 
   admin: [
+    /^\/events/,
     /^\/admin/,
     /^\/user/,
     /^\/checkout/,
     /^\/profile/,
-    /^\/dashboard\/user\/products/,
-    /^\/dashboard\/user\/products\/add-product/,
-    /^\/dashboard\/user\/products\/update-product/,
+    /^\/dashboard\/user\/events/,
+    /^\/dashboard\/user\/events\/add-event/,
+    /^\/dashboard\/user\/events\/update-event/,
     /^\/dashboard\/user\/orders\/purchase-history/,
-    /^\/dashboard\/user\/orders\/sales-history/,
+    /^\/dashboard\/user\/orders\/joined-history/,
     /^\/dashboard\/admin\/users/,
   ],
 };
@@ -41,10 +43,7 @@ export const middleware = async (request: NextRequest) => {
       return NextResponse.next();
     } else {
       return NextResponse.redirect(
-        new URL(
-          `https://second-hand-marketplace-client-seven.vercel.app/login`,
-          request.url
-        )
+        new URL(`http://localhost:3000/login`, request.url)
       );
     }
   }
@@ -61,14 +60,15 @@ export const middleware = async (request: NextRequest) => {
 
 export const config = {
   matcher: [
+    "/events/:path*",
     "/user/:page",
     "/checkout",
     "/profile",
-    "/user/dashboard/products",
-    "/user/dashboard/products/add-product",
-    "/user/dashboard/products/update-product",
+    "/user/dashboard/events",
+    "/user/dashboard/events/add-event",
+    "/user/dashboard/events/update-event",
     "/user/dashboard/orders/purchase-history",
-    "/user/dashboard/orders/sales-history",
+    "/user/dashboard/orders/joined-history",
     "/admin/dashboard/users",
   ],
 };
