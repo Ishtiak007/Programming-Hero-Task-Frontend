@@ -39,7 +39,7 @@ const data = {
     {
       title: "Manage Buy & Sell History",
       items: [
-        { title: "Joined Event", url: "/user/dashboard/orders/sales-history" },
+        { title: "Joined Event", url: "/user/dashboard/orders/joined-history" },
         {
           title: "Purchases Event",
           url: "/user/dashboard/orders/purchase-history",

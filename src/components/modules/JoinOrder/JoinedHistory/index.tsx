@@ -1,7 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-
 import * as React from "react";
-import { FaTrash } from "react-icons/fa";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -14,8 +13,8 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ChevronDown, EditIcon } from "lucide-react";
-
+import { ChevronDown } from "lucide-react";
+import moment from "moment-timezone";
 import { Button } from "../../../ui/button";
 import {
   DropdownMenu,
@@ -34,20 +33,11 @@ import {
   TableHeader,
   TableRow,
 } from "../../../ui/table";
-import Image from "next/image";
-import Link from "next/link";
 import { toast } from "sonner";
-import { TEvent } from "../../../../types/event";
-import {
-  deleteProductById,
-  updateProductStatusById,
-} from "../../../../services/EventApi";
+import { TOrder } from "../../../../types/order";
+import { updateOrderStatusById } from "../../../../services/JoinApi";
 
-export default function ManageUserAddedEvents({
-  events,
-}: {
-  events: TEvent[];
-}) {
+export default function SalesHistory({ salesHistory }: { salesHistory: any }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -56,17 +46,12 @@ export default function ManageUserAddedEvents({
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  // Modal state
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [eventToDelete, seteventToDelete] = React.useState<string | null>(null);
-
-  // delete a product
-  const handleDeleteEvent = async (id: string) => {
+  // update order status
+  const handleUpdateOrderStatus = async (id: string, status: string) => {
     try {
-      const response = await deleteProductById(id);
+      const response = await updateOrderStatusById(id, { status });
       if (response?.success) {
-        toast.success("Event deleted successfully by you");
-        closeModal(); // Close modal after deletion
+        toast.success(" Status updated successfully");
       } else {
         toast.error(response.error[0]?.message);
       }
@@ -75,122 +60,72 @@ export default function ManageUserAddedEvents({
     }
   };
 
-  // product status update
-  const handleUpdateEventStatus = async (id: string, status: string) => {
-    try {
-      const response = await updateProductStatusById(id, { status });
-      if (response?.success) {
-        toast.success("Event status updated successfully by you");
-      } else {
-        toast.error(response.error[0]?.message);
-      }
-    } catch {
-      toast.error("Something went wrong!");
-    }
-  };
-
-  // Open the confirmation modal
-  const openModal = (id: string) => {
-    seteventToDelete(id);
-    setIsModalOpen(true);
-  };
-
-  // Close the confirmation modal
-  const closeModal = () => {
-    setIsModalOpen(false);
-    seteventToDelete(null);
-  };
-
-  const columns: ColumnDef<TEvent>[] = [
+  const columns: ColumnDef<TOrder>[] = [
     {
-      accessorKey: "images",
-      header: "Thumbnail",
-      cell: ({ row }) => {
-        const images = row.getValue("images") as string[];
-        const firstImage = images?.[0];
-
-        return firstImage ? (
-          <div className="w-[60px] h-[60px] relative overflow-hidden rounded-lg ">
-            <Image
-              src={firstImage}
-              alt="Thumbnail Image"
-              fill
-              className="object-cover"
-            />
-          </div>
-        ) : (
-          <div className="w-[50px] h-[50px] flex items-center justify-center bg-gray-200">
-            <span className="text-xs text-gray-500">No Image</span>
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: "title",
-      header: "Title",
-      cell: ({ row }) => (
-        <div className="font-medium capitalize">{row.getValue("title")}</div>
-      ),
-    },
-    {
-      accessorKey: "category",
-      header: "Event Type",
-      cell: ({ row }) => {
-        const colors = [
-          "#169976",
-          "#4CAF50",
-          "#A02334",
-          "#2196F3",
-          "#F19ED2",
-          "#FF9800",
-          "#9C27B0",
-          "#03A9F4",
-          "#96EFFF",
-          "#FF5722",
-        ];
-
-        const randomColor = colors[Math.floor(Math.random() * colors.length)];
-
-        return (
-          <div className="flex items-center">
-            <span
-              style={{ color: randomColor }}
-              className="px-3 py-1 rounded-md text-white text-sm font-medium capitalize"
-            >
-              {row.getValue("category")}
-            </span>
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: "date",
-      header: "Added Date",
-      cell: ({ row }) => {
-        return (
-          <div className="font-medium capitalize">{row.getValue("date")}</div>
-        );
-      },
-    },
-    {
-      accessorKey: "price",
-      header: "Asking Costs",
+      accessorKey: "buyerID.name",
+      header: "User Name",
       cell: ({ row }) => {
         return (
           <div className="font-medium capitalize">
-            {row.getValue("price")} $
+            {row.original.buyerID?.name || "N/A"}
           </div>
         );
       },
     },
+    {
+      accessorKey: "buyerID.identifier",
+      header: "User Email",
+      cell: ({ row }) => {
+        return (
+          <div className="font-medium ">
+            {row.original.buyerID?.identifier || "N/A"}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "itemID.title",
+      header: "Event",
+      cell: ({ row }) => {
+        return (
+          <div className="font-medium capitalize">
+            {row.original.itemID?.title || "N/A"}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "createdAt",
+      header: "Date",
+      cell: ({ row }) => {
+        const createdAt = row.getValue("createdAt");
+        const formattedDate = createdAt
+          ? moment(createdAt).tz("Asia/Dhaka").format("YYYY-MMM-DD")
+          : "N/A";
+
+        return <div className="font-medium">{formattedDate}</div>;
+      },
+    },
 
     {
-      accessorKey: "status",
-      header: "Event Status",
+      accessorKey: "itemID.price",
+      header: "Cost",
       cell: ({ row }) => {
-        const product = row.original;
+        return (
+          <div className="font-medium ">
+            BDT {row.original.itemID?.price || "N/A"} ৳
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => {
+        const order = row.original;
+
         const handleStatusChange = (newStatus: string) => {
-          handleUpdateEventStatus(product._id, newStatus);
+          handleUpdateOrderStatus(order._id, newStatus);
         };
         return (
           <DropdownMenu>
@@ -198,14 +133,14 @@ export default function ManageUserAddedEvents({
               <Button
                 variant="outline"
                 className={`p-4 capitalize ${
-                  product.status === "available"
-                    ? "bg-green-600 text-white"
-                    : product.status === "sold"
+                  order.status === "pending"
                     ? "bg-red-600 text-white"
+                    : order.status === "sold"
+                    ? "bg-green-600 text-white"
                     : ""
                 } transition-all duration-300 ease-in-out hover:scale-105`}
               >
-                {product.status === "sold" ? "Unavailable" : product.status}
+                {order.status}
                 <ChevronDown className="ml-1 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -213,48 +148,26 @@ export default function ManageUserAddedEvents({
               <DropdownMenuLabel>Status</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => handleStatusChange("available")}
-                className="cursor-pointer text-green-600"
+                onClick={() => handleStatusChange("pending")}
+                className="cursor-pointer"
               >
-                Available
+                Pending
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => handleStatusChange("sold")}
-                className="cursor-pointer text-red-600"
+                onClick={() => handleStatusChange("completed")}
+                className="cursor-pointer"
               >
-                Unavailable
+                Completed
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
       },
     },
-    {
-      id: "actions",
-      header: "Update / Delete",
-      enableHiding: false,
-      cell: ({ row }) => {
-        const product = row.original;
-        return (
-          <div className="flex items-center justify-center gap-7">
-            <Link href={`/user/dashboard/events/update-event/${product?._id}`}>
-              <EditIcon size={18} className=" text-green-700" />
-            </Link>
-
-            <div
-              onClick={() => openModal(product?._id)} // Open modal on delete button click
-              className="cursor-pointer"
-            >
-              <FaTrash size={18} className=" text-red-700" />
-            </div>
-          </div>
-        );
-      },
-    },
   ];
 
   const table = useReactTable({
-    data: events,
+    data: salesHistory,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -279,17 +192,22 @@ export default function ManageUserAddedEvents({
   });
 
   return (
-    <div className="p-4">
+    <div>
       <h1 className="text-indigo-800 text-center text-lg my-5 font-semibold">
-        Manage All Events By - you
+        All Request History
       </h1>
-      <div className="w-full mx-auto p-4 border rounded-md shadow-xl">
-        <div className="flex gap-4 items-center ">
+      <div className="w-[95%] mx-auto p-4 border rounded-md shadow-xl">
+        <div>
           <Input
-            placeholder="Filter events by title"
-            value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+            placeholder="Filter Sales history by transaction ID"
+            value={
+              (table.getColumn("transactionId")?.getFilterValue() as string) ??
+              ""
+            }
             onChange={(event) =>
-              table.getColumn("title")?.setFilterValue(event.target.value)
+              table
+                .getColumn("transactionId")
+                ?.setFilterValue(event.target.value)
             }
             className="w-1/2 mx-auto"
           />
@@ -323,7 +241,7 @@ export default function ManageUserAddedEvents({
                     data-state={row.getIsSelected() && "selected"}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell className="border-t-2" key={cell.id}>
+                      <TableCell key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
@@ -338,7 +256,7 @@ export default function ManageUserAddedEvents({
                     colSpan={columns.length}
                     className="h-24 text-center "
                   >
-                    No data found from Database.
+                    No any history data found.
                   </TableCell>
                 </TableRow>
               )}
@@ -375,37 +293,6 @@ export default function ManageUserAddedEvents({
           </div>
         </div>
       </div>
-
-      {/* Confirmation Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-20 flex justify-center items-center z-20 transition-opacity duration-300 ease-out">
-          <div className="bg-white p-6 rounded-lg w-96 shadow-lg transform transition-all duration-300 ease-out opacity-100 translate-y-0">
-            <h3 className="text-xl font-semibold">Confirm Deletion</h3>
-            <p className="mt-4 text-sm text-gray-700">
-              Are you sure you want to delete this event? This action cannot be
-              undone.
-            </p>
-            <div className="mt-6 flex justify-between">
-              <button
-                onClick={closeModal}
-                className="px-4 py-2 bg-gray-500 rounded-md text-white cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  if (eventToDelete) {
-                    handleDeleteEvent(eventToDelete);
-                  }
-                }}
-                className="px-4 py-2 bg-red-600 text-white rounded-md cursor-pointer"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
