@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { FaTrash } from "react-icons/fa";
+import { ChevronDown, EditIcon } from "lucide-react";
 import {
-  ColumnDef,
   ColumnFiltersState,
   SortingState,
   VisibilityState,
@@ -14,7 +14,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ChevronDown, EditIcon } from "lucide-react";
 
 import { Button } from "../../../ui/button";
 import {
@@ -26,14 +25,6 @@ import {
   DropdownMenuTrigger,
 } from "../../../ui/dropdown-menu";
 import { Input } from "../../../ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../../../ui/table";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -56,17 +47,15 @@ export default function ManageUserAddedEvents({
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  // Modal state
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [eventToDelete, seteventToDelete] = React.useState<string | null>(null);
+  const [eventToDelete, setEventToDelete] = React.useState<string | null>(null);
 
-  // delete a product
   const handleDeleteEvent = async (id: string) => {
     try {
       const response = await deleteProductById(id);
       if (response?.success) {
         toast.success("Event deleted successfully by you");
-        closeModal(); // Close modal after deletion
+        closeModal();
       } else {
         toast.error(response.error[0]?.message);
       }
@@ -75,7 +64,6 @@ export default function ManageUserAddedEvents({
     }
   };
 
-  // product status update
   const handleUpdateEventStatus = async (id: string, status: string) => {
     try {
       const response = await updateProductStatusById(id, { status });
@@ -89,173 +77,49 @@ export default function ManageUserAddedEvents({
     }
   };
 
-  // Open the confirmation modal
   const openModal = (id: string) => {
-    seteventToDelete(id);
+    setEventToDelete(id);
     setIsModalOpen(true);
   };
 
-  // Close the confirmation modal
   const closeModal = () => {
     setIsModalOpen(false);
-    seteventToDelete(null);
+    setEventToDelete(null);
   };
 
-  const columns: ColumnDef<TEvent>[] = [
-    {
-      accessorKey: "images",
-      header: "Thumbnail",
-      cell: ({ row }) => {
-        const images = row.getValue("images") as string[];
-        const firstImage = images?.[0];
-
-        return firstImage ? (
-          <div className="w-[60px] h-[60px] relative overflow-hidden rounded-lg ">
-            <Image
-              src={firstImage}
-              alt="Thumbnail Image"
-              fill
-              className="object-cover"
-            />
-          </div>
-        ) : (
-          <div className="w-[50px] h-[50px] flex items-center justify-center bg-gray-200">
-            <span className="text-xs text-gray-500">No Image</span>
-          </div>
-        );
+  const columns = React.useMemo(
+    () => [
+      {
+        accessorKey: "images",
+        header: "Thumbnail",
       },
-    },
-    {
-      accessorKey: "title",
-      header: "Title",
-      cell: ({ row }) => (
-        <div className="font-medium capitalize">{row.getValue("title")}</div>
-      ),
-    },
-    {
-      accessorKey: "category",
-      header: "Event Type",
-      cell: ({ row }) => {
-        const colors = [
-          "#169976",
-          "#4CAF50",
-          "#A02334",
-          "#2196F3",
-          "#F19ED2",
-          "#FF9800",
-          "#9C27B0",
-          "#03A9F4",
-          "#96EFFF",
-          "#FF5722",
-        ];
-
-        const randomColor = colors[Math.floor(Math.random() * colors.length)];
-
-        return (
-          <div className="flex items-center">
-            <span
-              style={{ color: randomColor }}
-              className="px-3 py-1 rounded-md text-white text-sm font-medium capitalize"
-            >
-              {row.getValue("category")}
-            </span>
-          </div>
-        );
+      {
+        accessorKey: "title",
+        header: "Title",
       },
-    },
-    {
-      accessorKey: "date",
-      header: "Added Date",
-      cell: ({ row }) => {
-        return (
-          <div className="font-medium capitalize">{row.getValue("date")}</div>
-        );
+      {
+        accessorKey: "category",
+        header: "Event Type",
       },
-    },
-    {
-      accessorKey: "price",
-      header: "Asking Costs",
-      cell: ({ row }) => {
-        return (
-          <div className="font-medium capitalize">
-            {row.getValue("price")} $
-          </div>
-        );
+      {
+        accessorKey: "date",
+        header: "Added Date",
       },
-    },
-
-    {
-      accessorKey: "status",
-      header: "Event Status",
-      cell: ({ row }) => {
-        const product = row.original;
-        const handleStatusChange = (newStatus: string) => {
-          handleUpdateEventStatus(product._id, newStatus);
-        };
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild className="cursor-pointer">
-              <Button
-                variant="outline"
-                className={`p-4 capitalize ${
-                  product.status === "available"
-                    ? "bg-green-600 text-white"
-                    : product.status === "sold"
-                    ? "bg-red-600 text-white"
-                    : ""
-                } transition-all duration-300 ease-in-out hover:scale-105`}
-              >
-                {product.status === "sold" ? "Unavailable" : product.status}
-                <ChevronDown className="ml-1 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Status</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => handleStatusChange("available")}
-                className="cursor-pointer text-green-600"
-              >
-                Available
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => handleStatusChange("sold")}
-                className="cursor-pointer text-red-600"
-              >
-                Unavailable
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        );
+      {
+        accessorKey: "price",
+        header: "Asking Costs",
       },
-    },
-    {
-      id: "actions",
-      header: "Update / Delete",
-      enableHiding: false,
-      cell: ({ row }) => {
-        const product = row.original;
-        return (
-          <div className="flex items-center justify-center gap-7">
-            <Link href={`/user/dashboard/events/update-event/${product?._id}`}>
-              <EditIcon size={18} className=" text-green-700" />
-            </Link>
-
-            <div
-              onClick={() => openModal(product?._id)} // Open modal on delete button click
-              className="cursor-pointer"
-            >
-              <FaTrash size={18} className=" text-red-700" />
-            </div>
-          </div>
-        );
+      {
+        accessorKey: "status",
+        header: "Event Status",
       },
-    },
-  ];
+    ],
+    []
+  );
 
   const table = useReactTable({
     data: events,
-    columns,
+    columns: columns as any,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -272,7 +136,7 @@ export default function ManageUserAddedEvents({
     },
     initialState: {
       pagination: {
-        pageSize: 10,
+        pageSize: 6,
         pageIndex: 0,
       },
     },
@@ -281,98 +145,176 @@ export default function ManageUserAddedEvents({
   return (
     <div className="p-4">
       <h1 className="text-indigo-800 text-center text-lg my-5 font-semibold">
-        Manage All Events By - you
+        Manage All Events By You
       </h1>
-      <div className="w-full mx-auto p-4 border rounded-md shadow-xl">
-        <div className="flex gap-4 items-center ">
-          <Input
-            placeholder="Filter events by title"
-            value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("title")?.setFilterValue(event.target.value)
-            }
-            className="w-1/2 mx-auto"
-          />
-        </div>
-        <div className="mt-4">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead
-                      className="text-indigo-700 font-semibold uppercase"
-                      key={header.id}
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell className="border-t-2" key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center "
-                  >
-                    No data found from Database.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        <div className="flex justify-center items-center gap-5 my-7">
-          <div>
-            <p>
-              Page {table.getState().pagination.pageIndex + 1} of{" "}
-              {table.getPageCount()}
-            </p>
-          </div>
 
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="hover:cursor-pointer border border-neutral-300 px-4 flex py-[6px] gap-3 items-center justify-center font-medium rounded-full transition-all duration-300 ease-in-out hover:bg-indigo-800 hover:text-white  my-4 mt-2 bg-indigo-700 text-white"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="hover:cursor-pointer border border-neutral-300 px-4 flex py-[6px] gap-3 items-center justify-center font-medium rounded-full transition-all duration-300 ease-in-out hover:bg-indigo-800 hover:text-white  my-4 mt-2 bg-indigo-700 text-white"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              Next
-            </Button>
-          </div>
+      <div className="w-full mx-auto p-4 border rounded-md shadow-xl mb-6">
+        <Input
+          placeholder="Filter events by title"
+          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("title")?.setFilterValue(event.target.value)
+          }
+          className="w-full max-w-md mx-auto"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {table.getRowModel().rows.length === 0 ? (
+          <p className="text-center col-span-full text-gray-500">
+            No events found.
+          </p>
+        ) : (
+          table.getRowModel().rows.map((row) => {
+            const event = row.original as TEvent;
+            return (
+              <div
+                key={row.id}
+                className="border rounded-lg shadow-lg p-4 flex flex-col"
+              >
+                <div className="relative h-48 w-full rounded-md overflow-hidden mb-4">
+                  {event.images && event.images[0] ? (
+                    <Image
+                      src={event.images[0]}
+                      alt={event.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw,
+                             (max-width: 1200px) 50vw,
+                             33vw"
+                    />
+                  ) : (
+                    <div className="bg-gray-200 flex items-center justify-center h-full w-full text-gray-400">
+                      No Image
+                    </div>
+                  )}
+                </div>
+
+                <h2 className="text-lg font-semibold capitalize mb-1 truncate">
+                  {event.title}
+                </h2>
+
+                <p className="text-sm text-gray-600 mb-2 capitalize">
+                  <strong>Event Type:</strong> {event.category}
+                </p>
+
+                <p className="text-sm text-gray-600 mb-2">
+                  <strong>Date:</strong>{" "}
+                  {new Date(event.date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
+
+                <p className="text-sm text-gray-600 mb-2">
+                  <strong>Approximately Costs:</strong> ${event.price}
+                </p>
+
+                <span>
+                  <strong className="text-sm text-gray-600">
+                    AttendeeCount:{" "}
+                  </strong>
+                  <span className="text-indigo-600 font-semibold">
+                    {""}
+                    {event.status === "available"
+                      ? 0
+                      : event.status === "sold"
+                      ? 1
+                      : "-"}
+                  </span>
+                </span>
+
+                <div className="flex justify-between items-center gap-3 my-5">
+                  <Link
+                    href={`/user/dashboard/events/update-event/${event._id}`}
+                    className="text-green-600 hover:text-green-800 flex items-center gap-2"
+                    aria-label="Edit Event"
+                  >
+                    <EditIcon size={20} />
+                    Update
+                  </Link>
+
+                  <button
+                    onClick={() => openModal(event._id)}
+                    className="text-red-600 hover:text-red-800 flex items-center gap-2"
+                    aria-label="Delete Event"
+                  >
+                    <FaTrash size={20} /> Delete
+                  </button>
+                </div>
+
+                <div className="mb-3">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={`capitalize w-full ${
+                          event.status === "available"
+                            ? "bg-green-600 text-white"
+                            : event.status === "sold"
+                            ? "bg-red-600 text-white"
+                            : ""
+                        }`}
+                      >
+                        {event.status === "sold" ? "Unavailable" : event.status}{" "}
+                        <ChevronDown className="ml-2 h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Status</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={() =>
+                          handleUpdateEventStatus(event._id, "available")
+                        }
+                        className="cursor-pointer text-green-600"
+                      >
+                        Available
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          handleUpdateEventStatus(event._id, "sold")
+                        }
+                        className="cursor-pointer text-red-600"
+                      >
+                        Unavailable
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      <div className="flex justify-center items-center gap-5 my-7">
+        <p>
+          Page {table.getState().pagination.pageIndex + 1} of{" "}
+          {table.getPageCount()}
+        </p>
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="hover:cursor-pointer border border-neutral-300 px-4 flex py-[6px] gap-3 items-center justify-center font-medium rounded-full transition-all duration-300 ease-in-out hover:bg-indigo-800 hover:text-white bg-indigo-700 text-white"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="hover:cursor-pointer border border-neutral-300 px-4 flex py-[6px] gap-3 items-center justify-center font-medium rounded-full transition-all duration-300 ease-in-out hover:bg-indigo-800 hover:text-white bg-indigo-700 text-white"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
         </div>
       </div>
 

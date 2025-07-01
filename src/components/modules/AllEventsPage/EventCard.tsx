@@ -100,8 +100,13 @@ export default function EventCard({ event }: { event: TEvent }) {
                 <strong>Event Poster:</strong> {eventPosterName}
               </span>
               <span>
-                <strong>Date:</strong> {date}
+                <strong>Date:</strong>{" "}
+                {new Date(date).toLocaleString("en-US", {
+                  dateStyle: "full",
+                  timeStyle: "short",
+                })}
               </span>
+
               <span>
                 <strong>Location:</strong> {location}
               </span>

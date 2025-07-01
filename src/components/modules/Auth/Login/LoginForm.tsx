@@ -60,15 +60,6 @@ export default function LoginForm() {
     }
   };
 
-  const handleUserAutoFillButton = () => {
-    setValue("identifier", "ishtiak.sparrow98@gmail.com");
-    setValue("password", "123456Aa!");
-  };
-
-  const handleAdminAutoFillButton = () => {
-    setValue("identifier", "ishtiakahmed01999@gmail.com");
-    setValue("password", "123456Aa!");
-  };
   return (
     <div className="min-h-screen h-screen w-full max-w-3xl flex items-center justify-center  p-4 mx-auto ">
       <div className="w-full md:p-6 max-w-screen-md rounded-xl overflow-hidden shadow-xl">
@@ -137,22 +128,6 @@ export default function LoginForm() {
               <p className="text-center text-gray-500 text-[15px] my-5">
                 Click here to auto-fill your email and password
               </p>
-              <div className="flex flex-col gap-4 md:flex-row">
-                <button
-                  onClick={handleUserAutoFillButton}
-                  type="button"
-                  className="hover:cursor-pointer border border-neutral-300 px-4 flex py-[6px] gap-3 items-center justify-center font-medium rounded-full transition-all duration-300 ease-in-out hover:bg-indigo-500 hover:text-white my-4 mt-2 w-full flex-1 bg-zinc-50"
-                >
-                  User
-                </button>
-                <button
-                  onClick={handleAdminAutoFillButton}
-                  type="button"
-                  className="hover:cursor-pointer border border-neutral-300 px-4 flex py-[6px] gap-3 items-center justify-center font-medium rounded-full transition-all duration-300 ease-in-out hover:bg-indigo-500 hover:text-white my-4 mt-2 w-full flex-1 bg-zinc-50"
-                >
-                  Admin
-                </button>
-              </div>
             </FormProvider>
           </CardContent>
         </div>
