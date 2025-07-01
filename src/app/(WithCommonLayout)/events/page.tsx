@@ -1,16 +1,15 @@
 import React from "react";
 import { TEvent } from "../../../types/event";
-import { getAllProducts } from "../../../services/EventApi";
-import AllProducts from "../../../components/modules/AllEventsPage";
+import { getAllEvents } from "../../../services/EventApi";
+import AllEvents from "../../../components/modules/AllEventsPage";
 
-const AllProductsPage = async () => {
-  const { data: products }: { data: TEvent[] } = await getAllProducts();
-  console.log(products);
+const AllEventsPage = async () => {
+  const { data: events }: { data: TEvent[] } = await getAllEvents();
   return (
     <div>
-      <AllProducts products={products} />
+      <AllEvents events={events} />
     </div>
   );
 };
 
-export default AllProductsPage;
+export default AllEventsPage;

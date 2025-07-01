@@ -46,7 +46,7 @@ export default function EventCard({ event }: { event: TEvent }) {
   };
 
   return (
-    <Card className="w-full overflow-hidden shadow-lg rounded-xl p-0">
+    <Card className="w-full overflow-hidden shadow-lg rounded-xl p-4">
       <div className="flex flex-col md:flex-row w-full">
         {/* Image section */}
         <div className="w-full md:w-[40%] h-60 relative">
@@ -98,7 +98,7 @@ export default function EventCard({ event }: { event: TEvent }) {
             {/* Details */}
             <div className="text-sm flex flex-col gap-1">
               <span className="capitalize">
-                <strong>Category:</strong> {category}
+                <strong>Type:</strong> {category}
               </span>
               <span>
                 <strong>Date:</strong> {date}
@@ -107,7 +107,11 @@ export default function EventCard({ event }: { event: TEvent }) {
                 <strong>Location:</strong> {location}
               </span>
               <span>
-                <strong>Price:</strong> BDT {price} ৳
+                <strong>Approximate Cost:</strong> USD {price} $
+              </span>
+              <span>
+                <strong>AttendeeCount: </strong>
+                {status === "available" ? 0 : 1}
               </span>
             </div>
 
@@ -116,7 +120,7 @@ export default function EventCard({ event }: { event: TEvent }) {
               <Button
                 onClick={handleBookNow}
                 disabled={status === "sold"}
-                className="hover:cursor-pointer border border-neutral-300 px-4 flex py-[6px] gap-3 items-center justify-center font-medium rounded-full transition-all duration-300 ease-in-out hover:bg-indigo-800 hover:text-white bg-indigo-700 text-white"
+                className="hover:cursor-pointer border border-neutral-300 px-4 flex py-[6px] gap-3 items-center justify-center font-medium rounded-full transition-all duration-300 ease-in-out hover:bg-indigo-800 hover:text-white bg-indigo-700 text-white mx-auto mt-5"
               >
                 Join Event
               </Button>

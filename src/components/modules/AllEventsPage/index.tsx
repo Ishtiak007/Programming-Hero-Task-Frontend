@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
 import { TEvent } from "../../../types/event";
 import Container from "../../shared/Container";
 import { Input } from "../../ui/input";
@@ -12,11 +11,10 @@ import {
   SelectValue,
 } from "../../ui/select";
 import { Button } from "../../ui/button";
-import { Bookmark } from "lucide-react";
 import EventCard from "./EventCard";
 import ProductSkeleton from "../../ui/core/skeleton/ProductSkeleton";
 
-export default function AllEvents({ products }: { products: TEvent[] }) {
+export default function AllEvents({ events }: { events: TEvent[] }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [dateFrom, setDateFrom] = useState("");
@@ -24,7 +22,7 @@ export default function AllEvents({ products }: { products: TEvent[] }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const filtered = products
+  const filtered = events
     ?.filter((item) =>
       [item.title, item.category, item.location].some((f) =>
         f?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -60,7 +58,7 @@ export default function AllEvents({ products }: { products: TEvent[] }) {
   return (
     <Container>
       {/* Filter Controls */}
-      <div className="flex justify-between gap-4 my-6">
+      <div className="flex justify-between gap-7 my-6">
         {/* Search Input */}
         <Input
           type="text"
@@ -76,8 +74,8 @@ export default function AllEvents({ products }: { products: TEvent[] }) {
             <SelectValue placeholder="Sort by..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="priceAsc">Price: Low to High</SelectItem>
-            <SelectItem value="priceDesc">Price: High to Low</SelectItem>
+            <SelectItem value="priceAsc">Costs: Low to High</SelectItem>
+            <SelectItem value="priceDesc">Costs: High to Low</SelectItem>
             <SelectItem value="titleAsc">Title: A to Z</SelectItem>
             <SelectItem value="titleDesc">Title: Z to A</SelectItem>
             <SelectItem value="dateAsc">Date: Oldest First</SelectItem>
@@ -86,13 +84,15 @@ export default function AllEvents({ products }: { products: TEvent[] }) {
         </Select>
 
         {/* Date Range Filter */}
-        <div className="w-full lg:w-[32%] flex gap-2">
+        <div className="w-full lg:w-[32%] flex gap-2 items-center">
+          From:{" "}
           <Input
             type="date"
             value={dateFrom}
             onChange={(e) => setDateFrom(e.target.value)}
             className="w-1/2"
           />
+          To:
           <Input
             type="date"
             value={dateTo}
@@ -119,20 +119,8 @@ export default function AllEvents({ products }: { products: TEvent[] }) {
         </div>
       </div>
 
-      {/* Bookmark Button */}
-      <div className="mb-6 text-left">
-        <Link href="/bookmarks">
-          <Button
-            variant="outline"
-            className="text-indigo-700 hover:bg-indigo-700 hover:text-white border-indigo-700 rounded-full"
-          >
-            Bookmarked <Bookmark className="ml-2 h-4 w-4" />
-          </Button>
-        </Link>
-      </div>
-
       {/* Event Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-10">
         {paginated.length === 0
           ? Array.from({ length: 6 }).map((_, i) => <ProductSkeleton key={i} />)
           : paginated.map((event) => (

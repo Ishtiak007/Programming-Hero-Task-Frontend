@@ -46,12 +46,11 @@ export const getEventsByUser = async () => {
   }
 };
 
-// .............................end.....................
-export const getAllProducts = async () => {
+export const getAllEvents = async () => {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/listings`, {
       next: {
-        tags: ["PRODUCT"],
+        tags: ["EVENT"],
       },
     });
     const data = await res.json();
@@ -60,6 +59,8 @@ export const getAllProducts = async () => {
     throw new Error(error);
   }
 };
+
+// .............................end.....................
 
 export const getProductsByCategory = async (category: string) => {
   try {
