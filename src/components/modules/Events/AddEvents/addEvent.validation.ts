@@ -13,6 +13,7 @@ export const addProductValidation = z.object({
       message: "Invalid date format",
     }),
   location: z.string().min(1, "Location is required"),
+  eventPosterName: z.string().min(1, "This event poster is required"),
   images: z
     .array(z.object({ value: z.string().min(1, "Image URL is required") }))
     .min(1, "At least one image is required"),

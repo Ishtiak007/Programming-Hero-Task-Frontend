@@ -53,6 +53,7 @@ export default function EventUpdateForm({ event }: { event: TEvent }) {
       contactNumber: event?.contactNumber || "",
       date: event?.date || "",
       location: event?.location || "",
+      eventPosterName: event?.eventPosterName || "",
       images: event?.images?.map((image) => ({ value: image })) || [
         { value: "" },
       ],
@@ -207,6 +208,20 @@ export default function EventUpdateForm({ event }: { event: TEvent }) {
                     className="min-h-[150px]"
                     placeholder="Enter event description"
                   />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="eventPosterName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Event Poster Name</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="Enter your name" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

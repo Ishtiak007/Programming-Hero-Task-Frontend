@@ -54,6 +54,7 @@ export default function AddEventForm() {
       contactNumber: "",
       date: "", // empty string as default for native date input
       location: "",
+      eventPosterName: "",
       images: [{ value: "" }],
     },
     resolver: zodResolver(addProductValidation),
@@ -240,7 +241,7 @@ export default function AddEventForm() {
                 <FormMessage />
               </FormItem>
             </div>
-            <div>
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
               <FormField
                 control={form.control}
                 name="description"
@@ -260,6 +261,28 @@ export default function AddEventForm() {
                   </FormItem>
                 )}
               />
+
+              <div>
+                <FormField
+                  control={form.control}
+                  name="eventPosterName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Event Poster Name{" "}
+                        <span className="text-red-500">**</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="Enter event poster name"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
           </div>
 

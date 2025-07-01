@@ -27,6 +27,7 @@ export type TEvent = {
     | "productLaunch";
   contactNumber: string;
   location: string;
+  eventPosterName: string;
   isDeleted?: false;
   createdAt: string;
   updatedAt: string;

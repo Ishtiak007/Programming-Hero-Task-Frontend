@@ -24,6 +24,7 @@ export default function EventCard({ event }: { event: TEvent }) {
     description,
     date,
     location,
+    eventPosterName,
   } = event || {};
 
   const dispatch = useDispatch();
@@ -50,11 +51,6 @@ export default function EventCard({ event }: { event: TEvent }) {
       <div className="flex flex-col md:flex-row w-full">
         {/* Image section */}
         <div className="w-full md:w-[40%] h-60 relative">
-          {status === "sold" && (
-            <div className="absolute bottom-4 left-4 bg-rose-700 text-white py-1 px-4 text-xs font-semibold z-10 capitalize rounded-md">
-              {status}
-            </div>
-          )}
           <Image
             src={images?.[0]}
             alt="event image"
@@ -100,6 +96,9 @@ export default function EventCard({ event }: { event: TEvent }) {
               <span className="capitalize">
                 <strong>Type:</strong> {category}
               </span>
+              <span className="capitalize">
+                <strong>Event Poster:</strong> {eventPosterName}
+              </span>
               <span>
                 <strong>Date:</strong> {date}
               </span>
@@ -111,7 +110,10 @@ export default function EventCard({ event }: { event: TEvent }) {
               </span>
               <span>
                 <strong>AttendeeCount: </strong>
-                {status === "available" ? 0 : 1}
+                <span className="text-indigo-600 font-semibold">
+                  {""}
+                  {status === "available" ? 0 : status === "sold" ? 1 : "-"}
+                </span>
               </span>
             </div>
 
