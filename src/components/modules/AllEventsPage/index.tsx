@@ -17,6 +17,7 @@ import ProductSkeleton from "../../ui/core/skeleton/ProductSkeleton";
 export default function AllEvents({ events }: { events: TEvent[] }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,11 +29,13 @@ export default function AllEvents({ events }: { events: TEvent[] }) {
         f?.toLowerCase().includes(searchTerm.toLowerCase())
       )
     )
+    .filter((item) =>
+      selectedCategory !== "all" ? item.category === selectedCategory : true
+    )
     .filter((item) => {
       const eventDate = new Date(item.date).getTime();
       const from = dateFrom ? new Date(dateFrom).getTime() : null;
       const to = dateTo ? new Date(dateTo).getTime() : null;
-
       if (from && eventDate < from) return false;
       if (to && eventDate > to) return false;
       return true;
@@ -58,7 +61,7 @@ export default function AllEvents({ events }: { events: TEvent[] }) {
   return (
     <Container>
       {/* Filter Controls */}
-      <div className="flex justify-between gap-7 my-6">
+      <div className="lg:flex justify-between gap-4 my-6">
         {/* Search Input */}
         <Input
           type="text"
@@ -68,7 +71,7 @@ export default function AllEvents({ events }: { events: TEvent[] }) {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
 
-        {/* Sorting */}
+        {/* Sort Dropdown */}
         <Select value={sortBy} onValueChange={setSortBy}>
           <SelectTrigger className="w-full lg:w-[32%]">
             <SelectValue placeholder="Sort by..." />
@@ -80,6 +83,32 @@ export default function AllEvents({ events }: { events: TEvent[] }) {
             <SelectItem value="titleDesc">Title: Z to A</SelectItem>
             <SelectItem value="dateAsc">Date: Oldest First</SelectItem>
             <SelectItem value="dateDesc">Date: Newest First</SelectItem>
+          </SelectContent>
+        </Select>
+
+        {/* Category Filter */}
+        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+          <SelectTrigger className="w-full lg:w-[32%]">
+            <SelectValue placeholder="Filter by category" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Event Types</SelectItem>
+            {[
+              "wedding",
+              "birthday",
+              "corporate",
+              "concert",
+              "conference",
+              "festival",
+              "babyShower",
+              "engagement",
+              "anniversary",
+              "productLaunch",
+            ].map((cat) => (
+              <SelectItem key={cat} value={cat}>
+                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
 
@@ -108,6 +137,7 @@ export default function AllEvents({ events }: { events: TEvent[] }) {
             onClick={() => {
               setSearchTerm("");
               setSortBy("");
+              setSelectedCategory("all");
               setDateFrom("");
               setDateTo("");
               setCurrentPage(1);
